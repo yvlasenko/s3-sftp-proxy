@@ -30,6 +30,8 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
+      env:
+        GOPATH: /home/runner/go 
 
     - name: Build libc version
       run: go build -v . -o s3-sftp-proxy-libc
