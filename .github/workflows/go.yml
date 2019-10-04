@@ -18,8 +18,8 @@ jobs:
 
     - name: Install musl-tools
       run: |
-        apt-get update
-        apt-get install -y musl-tools
+        sudo apt-get update
+        sudo apt-get install -y musl-tools
 
     - name: Get dependencies
       run: |
