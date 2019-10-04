@@ -23,6 +23,7 @@ jobs:
 
     - name: Get dependencies
       run: |
+        set -x
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             install -d $GOPATH/bin
