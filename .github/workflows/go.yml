@@ -21,20 +21,33 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y musl-tools
 
-    - name: Get dependencies
+    - name: Prepare workspace
       run: |
         set -x
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            install -d $GOPATH/bin
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            $GOPATH/bin/dep ensure
-        fi
-      env:
-        GOPATH: /home/runner/go 
+        ls -l
+        pwd
+        env
+        # mv ./ $GOPATH/src/
+        # install -d $GOPATH/src
+        # install -d $GOPATH/bin
 
-    - name: Build libc version
-      run: go build -v . -o s3-sftp-proxy-libc
+    #   env:
+    #     GOPATH: /home/runner/work/s3-sftp-proxy/
 
-    - name: Build musl version
-      run: CC=/usr/bin/musl-gcc go build -v . -o s3-sftp-proxy-musl
+    # - name: Get dependencies
+    #   run: |
+    #     set -x
+    #     go get -v -t -d ./...
+    #     if [ -f Gopkg.toml ]; then
+    #         install -d $GOPATH/bin
+    #         curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    #         $GOPATH/bin/dep ensure
+    #     fi
+    #   env:
+    #     GOPATH: /home/runner/go
+
+    # - name: Build libc version
+    #   run: go build -v . -o s3-sftp-proxy-libc
+
+    # - name: Build musl version
+    #   run: CC=/usr/bin/musl-gcc go build -v . -o s3-sftp-proxy-musl
