@@ -25,7 +25,8 @@ jobs:
       run: |
         set -x
         install -d $GITHUB_WORKSPACE/go/src/s3-sftp-proxy $GITHUB_WORKSPACE/go/bin
-        mv $GITHUB_WORKSPACE/ $GITHUB_WORKSPACE/go/src/s3-sftp-proxy/
+        shopt -s extglob dotglob
+        mv !(go) $GITHUB_WORKSPACE/go/src/s3-sftp-proxy/
         ls -lR $GITHUB_WORKSPACE/
       env:
         GOPATH: $GITHUB_WORKSPACE/go
