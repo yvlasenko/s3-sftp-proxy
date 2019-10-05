@@ -26,7 +26,7 @@ jobs:
         set -x
         install -d $GOPATH/src/s3-sftp-proxy $GOPATH/bin $GOPATH/output
         shopt -s extglob dotglob
-        mv !(go) $GITHUB_WORKSPACE/go/src/s3-sftp-proxy/
+        mv !(go) $GOPATH/src/s3-sftp-proxy/
       env:
         GOPATH: $GITHUB_WORKSPACE/go
 
@@ -51,6 +51,7 @@ jobs:
     - name: Build musl version
       run: |
         export CC=/usr/bin/musl-gcc
+        cd $GOPATH/src/s3-sftp-proxy/
         go build -v . -o $GOPATH/output/s3-sftp-proxy-musl
       env:
         GOPATH: $GITHUB_WORKSPACE/go
