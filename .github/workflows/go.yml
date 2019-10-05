@@ -44,11 +44,11 @@ jobs:
       run: |
         export GOPATH=$GITHUB_WORKSPACE/go
         cd $GOPATH/src/s3-sftp-proxy/
-        go build -v . -o $GOPATH/output/s3-sftp-proxy-libc
+        go build -v -o $GOPATH/output/s3-sftp-proxy-libc
 
     - name: Build musl version
       run: |
         export GOPATH=$GITHUB_WORKSPACE/go
         export CC=/usr/bin/musl-gcc
         cd $GOPATH/src/s3-sftp-proxy/
-        go build -v . -o $GOPATH/output/s3-sftp-proxy-musl
+        go build -v -o $GOPATH/output/s3-sftp-proxy-musl
