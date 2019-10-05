@@ -50,5 +50,6 @@ jobs:
       run: |
         export GOPATH=$GITHUB_WORKSPACE/go
         export CC=/usr/bin/musl-gcc
+        export CGO_ENABLED=0
         cd $GOPATH/src/s3-sftp-proxy/
         go build -v -o $GOPATH/output/s3-sftp-proxy-musl
