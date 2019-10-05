@@ -24,15 +24,11 @@ jobs:
     - name: Prepare workspace
       run: |
         set -x
-        ls -l
-        pwd
-        env
-        # mv ./ $GOPATH/src/
-        # install -d $GOPATH/src
-        # install -d $GOPATH/bin
-
-    #   env:
-    #     GOPATH: /home/runner/work/s3-sftp-proxy/
+        install -d $GITHUB_WORKSPACE/go/src/s3-sftp-proxy $GITHUB_WORKSPACE/go/bin
+        mv $GITHUB_WORKSPACE/ $GITHUB_WORKSPACE/go/src/s3-sftp-proxy/
+        ls -lR $GITHUB_WORKSPACE/
+      env:
+        GOPATH: $GITHUB_WORKSPACE/go
 
     # - name: Get dependencies
     #   run: |
