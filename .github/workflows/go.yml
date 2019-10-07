@@ -25,7 +25,7 @@ jobs:
       run: |
         set -x
         export GOPATH=$GITHUB_WORKSPACE/go
-        install -d $GOPATH/src/s3-sftp-proxy $GOPATH/bin $GOPATH/output
+        install -d $GOPATH/src/s3-sftp-proxy $GOPATH/bin
         shopt -s extglob dotglob
         mv !(go) $GOPATH/src/s3-sftp-proxy/
 
@@ -44,7 +44,7 @@ jobs:
       run: |
         export GOPATH=$GITHUB_WORKSPACE/go
         cd $GOPATH/src/s3-sftp-proxy/
-        go build -v -o $GOPATH/output/s3-sftp-proxy-libc
+        go build -v -o $GITHUB_WORKSPACE/s3-sftp-proxy-libc
 
     - name: Build musl version
       run: |
@@ -52,4 +52,13 @@ jobs:
         export CC=/usr/bin/musl-gcc
         export CGO_ENABLED=0
         cd $GOPATH/src/s3-sftp-proxy/
-        go build -v -o $GOPATH/output/s3-sftp-proxy-musl
+        go build -v -o $GITHUB_WORKSPACE/s3-sftp-proxy-musl
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files:
+          - s3-sftp-proxy-libc
+          - s3-sftp-proxy-musl
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
