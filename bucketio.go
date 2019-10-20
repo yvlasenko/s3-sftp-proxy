@@ -560,7 +560,7 @@ type S3BucketIO struct {
 
 func buildKey(s3b *S3Bucket, path string) Path {
 	p := SplitIntoPath(path)
-	if len(p) > 1 && p[1] == s3b.StripPrefix {
+	if len(p) > 1 && p[1] == Path.String(s3b.StripPrefix) {
 		p = p[2:]
 	}
 	return s3b.KeyPrefix.Join(p)
