@@ -65,12 +65,12 @@ type S3Bucket struct {
 	AWSConfig                      *aws.Config
 	Bucket                         string
 	KeyPrefix                      Path
+	StripPrefix                    string
 	MaxObjectSize                  int64
 	Users                          UserStore
 	Perms                          Perms
 	ServerSideEncryption           ServerSideEncryptionConfig
 	KeyboardInteractiveAuthEnabled bool
-	StripPrefix                    string
 }
 
 type S3Buckets struct {

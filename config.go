@@ -38,6 +38,7 @@ type S3BucketConfig struct {
 	S3ForcePathStyle               *bool                    `toml:"s3_force_path_style"`
 	Bucket                         string                   `toml:"bucket"`
 	KeyPrefix                      string                   `toml:"key_prefix"`
+	StripPrefix                    string                   `toml:"strip_prefix"`
 	BucketUrl                      *URL                     `toml:"bucket_url"`
 	Auth                           string                   `toml:"auth"`
 	MaxObjectSize                  *int64                   `toml:"max_object_size"`
@@ -48,7 +49,6 @@ type S3BucketConfig struct {
 	SSECustomerKey                 string                   `toml:"sse_customer_key"`
 	SSEKMSKeyId                    string                   `toml:"sse_kms_key_id"`
 	KeyboardInteractiveAuthEnabled bool                     `toml:"keyboard_interactive_auth"`
-	StripPrefix                    string                   `toml:"strip_prefix"`
 }
 
 type AuthUser struct {
