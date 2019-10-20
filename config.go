@@ -48,6 +48,7 @@ type S3BucketConfig struct {
 	SSECustomerKey                 string                   `toml:"sse_customer_key"`
 	SSEKMSKeyId                    string                   `toml:"sse_kms_key_id"`
 	KeyboardInteractiveAuthEnabled bool                     `toml:"keyboard_interactive_auth"`
+	StripPrefix                    string                   `toml:"strip_prefix"`
 }
 
 type AuthUser struct {

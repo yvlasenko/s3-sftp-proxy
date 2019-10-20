@@ -70,6 +70,7 @@ type S3Bucket struct {
 	Perms                          Perms
 	ServerSideEncryption           ServerSideEncryptionConfig
 	KeyboardInteractiveAuthEnabled bool
+	StripPrefix                    string
 }
 
 type S3Buckets struct {
@@ -162,6 +163,7 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 		AWSConfig:     awsCfg,
 		Bucket:        bCfg.Bucket,
 		KeyPrefix:     keyPrefix,
+		StripPrefix:   bCfg.StripPrefix,
 		MaxObjectSize: maxObjectSize,
 		Users:         users,
 		Perms: Perms{
