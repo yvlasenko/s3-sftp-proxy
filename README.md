@@ -135,7 +135,7 @@ aws_secret_access_key = "bbb"
 
 		`key` = `key_prefix` + `path`
 
-  `strip_prefix` (optional)
+* `strip_prefix` (optional)
 
     Specifies the prefix stripped from the requests sent from the client, i.e.:
 
@@ -143,7 +143,7 @@ aws_secret_access_key = "bbb"
         `key_prefix` = `my_prefix`
         `strip_prefix` = `something_I_dont_want`
 
-        The following request paths would be equivalent:
+    The following request paths would be equivalent:
 
         `s3://my_bucket/my_prefix/something_I_dont_want/something_I_want.txt`
         `s3://my_bucket/my_prefix/something_I_want.txt`
