@@ -95,6 +95,7 @@ s3_force_path_style = true
 disable_ssl = false
 bucket = "BUCKET"
 key_prefix = "PREFIX"
+strip_prefix = "PREFIX"
 bucket_url = "s3://BUCKET/PREFIX"
 profile = "profile"
 region = "ap-northeast-1"
@@ -130,9 +131,22 @@ aws_secret_access_key = "bbb"
 
 * `key_prefix` (required when `bucket_url` is unspecified)
 
-	Specifies the prefix prepended to the file path sent from the client.  The key string is derived as follows:
+	Specifies the prefix prepended to the file path sent from the client. The key string is derived as follows:
 
 		`key` = `key_prefix` + `path`
+
+* `strip_prefix` (optional)
+
+    Specifies the prefix stripped from the requests sent from the client, i.e.:
+
+        `bucket` = `my_bucket`
+        `key_prefix` = `my_prefix`
+        `strip_prefix` = `something_I_dont_want`
+
+    The following request paths would be equivalent:
+
+        `s3://my_bucket/my_prefix/something_I_dont_want/something_I_want.txt`
+        `s3://my_bucket/my_prefix/something_I_want.txt`
 
 * `bucket_url` (required when `bucket` is unspecified)
 

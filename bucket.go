@@ -65,6 +65,7 @@ type S3Bucket struct {
 	AWSConfig                      *aws.Config
 	Bucket                         string
 	KeyPrefix                      Path
+	StripPrefix                    Path
 	MaxObjectSize                  int64
 	Users                          UserStore
 	Perms                          Perms
@@ -138,6 +139,10 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 	if len(keyPrefix) > 0 && keyPrefix[0] == "" {
 		keyPrefix = keyPrefix[1:]
 	}
+	stripPrefix := SplitIntoPath(bCfg.StripPrefix)
+	if len(stripPrefix) > 0 && stripPrefix[0] == "" {
+		stripPrefix = stripPrefix[1:]
+	}
 	maxObjectSize := int64(-1)
 	if bCfg.MaxObjectSize != nil {
 		maxObjectSize = *bCfg.MaxObjectSize
@@ -162,6 +167,7 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 		AWSConfig:     awsCfg,
 		Bucket:        bCfg.Bucket,
 		KeyPrefix:     keyPrefix,
+		StripPrefix:   stripPrefix,
 		MaxObjectSize: maxObjectSize,
 		Users:         users,
 		Perms: Perms{
