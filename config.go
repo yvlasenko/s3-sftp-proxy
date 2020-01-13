@@ -13,6 +13,8 @@ var (
 	minReaderMinChunkSize       = 262144
 	minListerLookbackBufferSize = 100
 	vTrue                       = true
+	limitDirListing             = false
+	maxKeys                     = 1000
 )
 
 type URL struct {
@@ -42,6 +44,7 @@ type S3BucketConfig struct {
 	BucketUrl                      *URL                     `toml:"bucket_url"`
 	Auth                           string                   `toml:"auth"`
 	MaxObjectSize                  *int64                   `toml:"max_object_size"`
+	MaxKeys                        *int                     `toml:"max_keys"`
 	Readable                       *bool                    `toml:"readble"`
 	Writable                       *bool                    `toml:"writable"`
 	Listable                       *bool                    `toml:"listable"`
@@ -49,6 +52,7 @@ type S3BucketConfig struct {
 	SSECustomerKey                 string                   `toml:"sse_customer_key"`
 	SSEKMSKeyId                    string                   `toml:"sse_kms_key_id"`
 	KeyboardInteractiveAuthEnabled bool                     `toml:"keyboard_interactive_auth"`
+	LimitDirListing                *bool                    `toml:"limit_dir_listing"`
 }
 
 type AuthUser struct {
@@ -113,6 +117,12 @@ func validateAndFixupBucketConfig(bCfg *S3BucketConfig) error {
 	}
 	if bCfg.Listable == nil {
 		bCfg.Listable = &vTrue
+	}
+	if bCfg.LimitDirListing == nil {
+		bCfg.LimitDirListing = &limitDirListing
+	}
+	if bCfg.MaxKeys == nil {
+		bCfg.MaxKeys = &maxKeys
 	}
 	return nil
 }

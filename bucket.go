@@ -67,10 +67,12 @@ type S3Bucket struct {
 	KeyPrefix                      Path
 	StripPrefix                    Path
 	MaxObjectSize                  int64
+	MaxKeys                        int
 	Users                          UserStore
 	Perms                          Perms
 	ServerSideEncryption           ServerSideEncryptionConfig
 	KeyboardInteractiveAuthEnabled bool
+	LimitDirListing                bool
 }
 
 type S3Buckets struct {
