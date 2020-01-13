@@ -259,7 +259,7 @@ type S3ObjectLister struct {
 	continuation     *string
 	noMore           bool
 	LimitDirListing  bool
-	MaxKeys          int
+	MaxKeys          int64
 }
 
 func aclToMode(owner *aws_s3.Owner, grants []*aws_s3.Grant) os.FileMode {
@@ -393,7 +393,7 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 		&aws_s3.ListObjectsV2Input{
 			Bucket:            &sol.Bucket,
 			Prefix:            &prefix,
-			MaxKeys:           aws.Int64(10000),
+			MaxKeys:           &sol.MaxKeys,
 			Delimiter:         aws.String("/"),
 			ContinuationToken: sol.continuation,
 		},

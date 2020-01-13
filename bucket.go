@@ -67,7 +67,7 @@ type S3Bucket struct {
 	KeyPrefix                      Path
 	StripPrefix                    Path
 	MaxObjectSize                  int64
-	MaxKeys                        int
+	MaxKeys                        int64
 	Users                          UserStore
 	Perms                          Perms
 	ServerSideEncryption           ServerSideEncryptionConfig

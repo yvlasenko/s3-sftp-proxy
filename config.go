@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	minReaderLookbackBufferSize = 1048576
-	minReaderMinChunkSize       = 262144
-	minListerLookbackBufferSize = 100
-	vTrue                       = true
-	limitDirListing             = false
-	maxKeys                     = 1000
+	minReaderLookbackBufferSize       = 1048576
+	minReaderMinChunkSize             = 262144
+	minListerLookbackBufferSize       = 100
+	vTrue                             = true
+	limitDirListing                   = false
+	maxKeys                     int64 = 1000
 )
 
 type URL struct {
@@ -44,7 +44,7 @@ type S3BucketConfig struct {
 	BucketUrl                      *URL                     `toml:"bucket_url"`
 	Auth                           string                   `toml:"auth"`
 	MaxObjectSize                  *int64                   `toml:"max_object_size"`
-	MaxKeys                        *int                     `toml:"max_keys"`
+	MaxKeys                        *int64                   `toml:"max_keys"`
 	Readable                       *bool                    `toml:"readble"`
 	Writable                       *bool                    `toml:"writable"`
 	Listable                       *bool                    `toml:"listable"`
