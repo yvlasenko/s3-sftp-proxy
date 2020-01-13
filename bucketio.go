@@ -375,8 +375,29 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 	if prefix != "" {
 		prefix += "/"
 	}
-	F(sol.Debug, "ListObjectsV2WithContext(Bucket=%s, Prefix=%s, Continuation=%v)", sol.Bucket, prefix, sol.continuation)
-	out, err := sol.S3.ListObjectsV2WithContext(
+	// F(sol.Debug, "ListObjectsV2WithContext(Bucket=%s, Prefix=%s, Continuation=%v)", sol.Bucket, prefix, sol.continuation)
+	// out, err := sol.S3.ListObjectsV2WithContext(
+	// 	sol.Ctx,
+	// 	&aws_s3.ListObjectsV2Input{
+	// 		Bucket:            &sol.Bucket,
+	// 		Prefix:            &prefix,
+	// 		MaxKeys:           aws.Int64(10000),
+	// 		Delimiter:         aws.String("/"),
+	// 		ContinuationToken: sol.continuation,
+	// 	},
+	// )
+
+	F(sol.Debug, "ListObjectsV2PagesWithContext(Bucket=%s, Prefix=%s, Continuation=%v)", sol.Bucket, prefix, sol.continuation)
+
+	var out *aws_s3.ListObjectsV2Output
+	var listing_err error
+
+	out = &aws_s3.ListObjectsV2Output{
+		CommonPrefixes: []*aws_s3.CommonPrefix{},
+		Contents:       []*aws_s3.Object{},
+	}
+
+	listing_err = sol.S3.ListObjectsV2PagesWithContext(
 		sol.Ctx,
 		&aws_s3.ListObjectsV2Input{
 			Bucket:            &sol.Bucket,
@@ -385,11 +406,16 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 			Delimiter:         aws.String("/"),
 			ContinuationToken: sol.continuation,
 		},
-	)
-	if err != nil {
-		sol.Debug("=> ", err)
+		func(page *aws_s3.ListObjectsV2Output, lastPage bool) bool {
+			out.CommonPrefixes = append(out.CommonPrefixes, page.CommonPrefixes...)
+			out.Contents = append(out.Contents, page.Contents...)
+			return false
+		})
+
+	if listing_err != nil {
+		sol.Debug("=> ", listing_err)
 		mOperationStatus.With(lFailure).Inc()
-		return i, err
+		return i, listing_err
 	}
 	F(sol.Debug, "=> { CommonPrefixes=len(%d), Contents=len(%d) }", len(out.CommonPrefixes), len(out.Contents))
 
