@@ -258,6 +258,8 @@ type S3ObjectLister struct {
 	spooled          []os.FileInfo
 	continuation     *string
 	noMore           bool
+	LimitDirListing  bool
+	MaxKeys          int
 }
 
 func aclToMode(owner *aws_s3.Owner, grants []*aws_s3.Grant) os.FileMode {
@@ -375,17 +377,6 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 	if prefix != "" {
 		prefix += "/"
 	}
-	// F(sol.Debug, "ListObjectsV2WithContext(Bucket=%s, Prefix=%s, Continuation=%v)", sol.Bucket, prefix, sol.continuation)
-	// out, err := sol.S3.ListObjectsV2WithContext(
-	// 	sol.Ctx,
-	// 	&aws_s3.ListObjectsV2Input{
-	// 		Bucket:            &sol.Bucket,
-	// 		Prefix:            &prefix,
-	// 		MaxKeys:           aws.Int64(10000),
-	// 		Delimiter:         aws.String("/"),
-	// 		ContinuationToken: sol.continuation,
-	// 	},
-	// )
 
 	F(sol.Debug, "ListObjectsV2PagesWithContext(Bucket=%s, Prefix=%s, Continuation=%v)", sol.Bucket, prefix, sol.continuation)
 
@@ -409,7 +400,7 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 		func(page *aws_s3.ListObjectsV2Output, lastPage bool) bool {
 			out.CommonPrefixes = append(out.CommonPrefixes, page.CommonPrefixes...)
 			out.Contents = append(out.Contents, page.Contents...)
-			return false
+			return !sol.LimitDirListing && page.NextContinuationToken != nil
 		})
 
 	if listing_err != nil {
@@ -867,6 +858,8 @@ func (s3io *S3BucketIO) Filelist(req *sftp.Request) (sftp.ListerAt, error) {
 			S3:               s3io.Bucket.S3(sess),
 			Lookback:         s3io.ListerLookbackBufferSize,
 			PhantomObjectMap: s3io.PhantomObjectMap,
+			LimitDirListing:  s3io.Bucket.LimitDirListing,
+			MaxKeys:          s3io.Bucket.MaxKeys,
 		}, nil
 	default:
 		mPermissionsError.With(lPermErr).Inc()

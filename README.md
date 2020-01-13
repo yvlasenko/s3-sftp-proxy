@@ -45,7 +45,7 @@ lister_lookback_buffer_size = 100
 metrics_bind = ":2112"
 metrics_endpoint = "/metrics"
 
-# buckets and authantication settings follow...
+# buckets and authentication settings follow...
 ```
 
 * `host_key_file` (required)
@@ -185,6 +185,14 @@ aws_secret_access_key = "bbb"
 * `listable` (optional, defaults to `true`)
 
 	Specifies whether to allow the client to list objects in S3.
+
+* `max_keys` (optional, defalts to `1000`)
+
+    Specifies the amount of objects to return (up to 1000) per page.
+
+* `limit_dir_listing` (optional, defalts to `false`)
+
+    Specifies whether to limit S3 objects listing to one page.
 
 * `server_side_encryption` (optional, defaults to `"none"`)
 
