@@ -222,7 +222,7 @@ outer:
 	}
 
 	// drain
-	for _ = range connChan {
+	for range connChan {
 	}
 
 	wg.Wait()
