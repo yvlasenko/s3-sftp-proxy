@@ -117,9 +117,8 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 				bCfg.Profile,
 			),
 		)
-	} else {
-		// credentials are retrieved through EC2 metadata on runtime
 	}
+	// credentials are retrieved through EC2 metadata on runtime otherwise
 	if bCfg.Endpoint != "" {
 		awsCfg = awsCfg.WithEndpoint(bCfg.Endpoint)
 	}
