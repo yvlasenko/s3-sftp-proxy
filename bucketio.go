@@ -24,10 +24,6 @@ type ReadDeadlineSettable interface {
 	SetReadDeadline(t time.Time) error
 }
 
-type WriteDeadlineSettable interface {
-	SetWriteDeadline(t time.Time) error
-}
-
 var sseTypes = map[ServerSideEncryptionType]*string{
 	ServerSideEncryptionTypeKMS: aws.String("aws:kms"),
 }
