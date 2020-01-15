@@ -140,7 +140,7 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 	go func(reqs <-chan *ssh.Request) {
 		defer wg.Done()
 		defer s.Log.Debug("HandleClient.requestHandler ended")
-		for _ = range reqs {
+		for range reqs {
 		}
 	}(reqs)
 
