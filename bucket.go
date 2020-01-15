@@ -81,8 +81,7 @@ type S3Buckets struct {
 }
 
 func (s3bs *S3Buckets) Get(name string) *S3Bucket {
-	b, _ := s3bs.Buckets[name]
-	return b
+	return s3bs.Buckets[name]
 }
 
 func (s3b *S3Bucket) S3(sess *aws_session.Session) *s3.S3 {
