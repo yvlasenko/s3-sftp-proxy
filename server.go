@@ -33,7 +33,7 @@ func asHandlers(handlers interface {
 	sftp.FileCmder
 	sftp.FileLister
 }) sftp.Handlers {
-	return sftp.Handlers{handlers, handlers, handlers, handlers}
+	return sftp.Handlers{FileGet: handlers, FilePut: handlers, FileCmd: handlers, FileList: handlers}
 }
 
 func (s *Server) HandleChannel(ctx context.Context, bucket *S3Bucket, sshCh ssh.Channel, reqs <-chan *ssh.Request) {
