@@ -78,7 +78,10 @@ func (s *Server) HandleChannel(ctx context.Context, bucket *S3Bucket, sshCh ssh.
 				if req.Type == "subsystem" && string(req.Payload[4:]) == "sftp" {
 					ok = true
 				}
-				req.Reply(ok, nil)
+				err := req.Reply(ok, nil)
+				if err != nil {
+					s.Log.Debug("Channel reply failed")
+				}
 			}
 		}
 	}()
