@@ -118,7 +118,7 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 		<-innerCtx.Done()
 		err := conn.SetDeadline(time.Unix(1, 0))
 		if err != nil {
-			s.Log.Debug("SetDeadline failed")
+			s.Log.Debug("HandleClient SetDeadline failed")
 		}
 	}()
 
@@ -216,7 +216,10 @@ outer:
 				}
 			}()
 		case <-ctx.Done():
-			lsnr.SetDeadline(time.Unix(1, 0))
+			err := lsnr.SetDeadline(time.Unix(1, 0))
+			if err != nil {
+				s.Log.Debug("RunListenerEventLoop SetDeadline failed")
+			}
 			break outer
 		}
 	}
