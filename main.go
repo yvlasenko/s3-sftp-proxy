@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -172,10 +172,10 @@ func main() {
 	http.Handle(metricsEndpoint, promhttp.Handler())
 
 	go func() {
-	    http.ListenAndServe(metricsBind, nil)
+		logger.Fatal(http.ListenAndServe(metricsBind, nil))
 	}()
 
-    logger.Info("Metrics listen on ", metricsBind, metricsEndpoint)
+	logger.Info("Metrics listen on ", metricsBind, metricsEndpoint)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
