@@ -10,7 +10,7 @@ type PhantomObjectInfo struct {
 	LastModified time.Time
 	Size         int64
 	Opaque       interface{}
-	Mtx          sync.Mutex
+	Mtx          *sync.Mutex
 }
 
 func (info *PhantomObjectInfo) GetOne() PhantomObjectInfo {
