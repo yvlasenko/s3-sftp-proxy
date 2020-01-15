@@ -116,7 +116,10 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 
 	go func() {
 		<-innerCtx.Done()
-		conn.SetDeadline(time.Unix(1, 0))
+		err := conn.SetDeadline(time.Unix(1, 0))
+		if err != nil {
+			s.Log.Debug("SetDeadline failed")
+		}
 	}()
 
 	// Before use, a handshake must be performed on the incoming net.Conn.
