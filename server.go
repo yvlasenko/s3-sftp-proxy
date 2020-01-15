@@ -151,7 +151,10 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 		defer s.Log.Debug("HandleClient.channelHandler ended")
 		for newSSHCh := range chans {
 			if newSSHCh.ChannelType() != "session" {
-				newSSHCh.Reject(ssh.UnknownChannelType, "unknown channel type")
+				err := newSSHCh.Reject(ssh.UnknownChannelType, "unknown channel type")
+				if err != nil {
+					F(s.Log.Debug, "channel reject failed: %s", err)
+				}
 				F(s.Log.Info, "unknown channel type: %s", newSSHCh.ChannelType())
 				continue
 			}
