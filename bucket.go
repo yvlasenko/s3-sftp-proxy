@@ -166,13 +166,15 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 		customerKey = []byte{}
 	}
 	return &S3Bucket{
-		Name:          name,
-		AWSConfig:     awsCfg,
-		Bucket:        bCfg.Bucket,
-		KeyPrefix:     keyPrefix,
-		StripPrefix:   stripPrefix,
-		MaxObjectSize: maxObjectSize,
-		Users:         users,
+		Name:            name,
+		AWSConfig:       awsCfg,
+		Bucket:          bCfg.Bucket,
+		KeyPrefix:       keyPrefix,
+		StripPrefix:     stripPrefix,
+		MaxObjectSize:   maxObjectSize,
+		Users:           users,
+		MaxKeys:         *bCfg.MaxKeys,
+		LimitDirListing: *bCfg.LimitDirListing,
 		Perms: Perms{
 			Readable: *bCfg.Readable,
 			Writable: *bCfg.Writable,

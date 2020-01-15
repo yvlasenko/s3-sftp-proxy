@@ -392,7 +392,7 @@ func (sol *S3ObjectLister) ListAt(result []os.FileInfo, o int64) (int, error) {
 		&aws_s3.ListObjectsV2Input{
 			Bucket:            &sol.Bucket,
 			Prefix:            &prefix,
-			MaxKeys:           &sol.MaxKeys,
+			MaxKeys:           aws.Int64(sol.MaxKeys),
 			Delimiter:         aws.String("/"),
 			ContinuationToken: sol.continuation,
 		},
