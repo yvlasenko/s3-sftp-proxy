@@ -127,7 +127,10 @@ func (oor *S3GetObjectOutputReader) ReadAt(buf []byte, off int64) (int, error) {
 	}()
 	select {
 	case <-oor.Ctx.Done():
-		oor.Goo.Body.(ReadDeadlineSettable).SetReadDeadline(time.Unix(1, 0))
+		err = oor.Goo.Body.(ReadDeadlineSettable).SetReadDeadline(time.Unix(1, 0))
+		if err != nil {
+			oor.Log.Debug("ReadAt SetReadDeadline failed")
+		}
 		oor.Log.Debug("canceled")
 		return 0, fmt.Errorf("read operation canceled")
 	case res := <-resultChan:
