@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -60,7 +60,7 @@ func buildSSHServerConfig(buckets *S3Buckets, cfg *S3SFTPProxyConfig) (*ssh.Serv
 			if u.PublicKeys != nil {
 				keyMarshaled := key.Marshal()
 				for _, herKey := range u.PublicKeys {
-					if herKey.Type() == key.Type() && len(herKey.Marshal()) == len(keyMarshaled) && bytes.Compare(herKey.Marshal(), keyMarshaled) == 0 {
+					if herKey.Type() == key.Type() && len(herKey.Marshal()) == len(keyMarshaled) && bytes.Equal(herKey.Marshal(), keyMarshaled) {
 						return &ssh.Permissions{
 							Extensions: map[string]string{
 								"pubkey-fp": ssh.FingerprintSHA256(key),
@@ -172,15 +172,15 @@ func main() {
 	http.Handle(metricsEndpoint, promhttp.Handler())
 
 	go func() {
-	    http.ListenAndServe(metricsBind, nil)
+		logger.Fatal(http.ListenAndServe(metricsBind, nil))
 	}()
 
-    logger.Info("Metrics listen on ", metricsBind, metricsEndpoint)
+	logger.Info("Metrics listen on ", metricsBind, metricsEndpoint)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 
 	errChan := make(chan error)

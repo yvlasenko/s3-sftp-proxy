@@ -27,8 +27,7 @@ func (us *UserStore) Add(u *User) {
 }
 
 func (us *UserStore) Lookup(name string) *User {
-	u, _ := us.usersMap[name]
-	return u
+	return us.usersMap[name]
 }
 
 func parseAuthorizedKeys(pubKeys []ssh.PublicKey, pubKeyFileContent []byte) ([]ssh.PublicKey, error) {

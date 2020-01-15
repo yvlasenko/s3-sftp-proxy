@@ -81,8 +81,7 @@ type S3Buckets struct {
 }
 
 func (s3bs *S3Buckets) Get(name string) *S3Bucket {
-	b, _ := s3bs.Buckets[name]
-	return b
+	return s3bs.Buckets[name]
 }
 
 func (s3b *S3Bucket) S3(sess *aws_session.Session) *s3.S3 {
@@ -118,9 +117,8 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 				bCfg.Profile,
 			),
 		)
-	} else {
-		// credentials are retrieved through EC2 metadata on runtime
 	}
+	// credentials are retrieved through EC2 metadata on runtime otherwise
 	if bCfg.Endpoint != "" {
 		awsCfg = awsCfg.WithEndpoint(bCfg.Endpoint)
 	}
@@ -159,7 +157,10 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 			return nil, errors.Wrapf(err, `invalid base64-encoded string specified for "sse_customer_key"`)
 		}
 		hasher := crypto.MD5.New()
-		hasher.Write(customerKey)
+		_, err = hasher.Write(customerKey)
+		if err != nil {
+			return nil, errors.Wrapf(err, `customerKey hashing failed`)
+		}
 		customerKeyMD5 = base64.StdEncoding.EncodeToString(hasher.Sum([]byte{}))
 	} else {
 		customerKey = []byte{}

@@ -33,7 +33,7 @@ func asHandlers(handlers interface {
 	sftp.FileCmder
 	sftp.FileLister
 }) sftp.Handlers {
-	return sftp.Handlers{handlers, handlers, handlers, handlers}
+	return sftp.Handlers{FileGet: handlers, FilePut: handlers, FileCmd: handlers, FileList: handlers}
 }
 
 func (s *Server) HandleChannel(ctx context.Context, bucket *S3Bucket, sshCh ssh.Channel, reqs <-chan *ssh.Request) {
@@ -78,7 +78,10 @@ func (s *Server) HandleChannel(ctx context.Context, bucket *S3Bucket, sshCh ssh.
 				if req.Type == "subsystem" && string(req.Payload[4:]) == "sftp" {
 					ok = true
 				}
-				req.Reply(ok, nil)
+				err := req.Reply(ok, nil)
+				if err != nil {
+					s.Log.Debug("Channel reply failed")
+				}
 			}
 		}
 	}()
@@ -113,7 +116,10 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 
 	go func() {
 		<-innerCtx.Done()
-		conn.SetDeadline(time.Unix(1, 0))
+		err := conn.SetDeadline(time.Unix(1, 0))
+		if err != nil {
+			s.Log.Debug("HandleClient SetDeadline failed")
+		}
 	}()
 
 	// Before use, a handshake must be performed on the incoming net.Conn.
@@ -134,7 +140,7 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 	go func(reqs <-chan *ssh.Request) {
 		defer wg.Done()
 		defer s.Log.Debug("HandleClient.requestHandler ended")
-		for _ = range reqs {
+		for range reqs {
 		}
 	}(reqs)
 
@@ -145,7 +151,10 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 		defer s.Log.Debug("HandleClient.channelHandler ended")
 		for newSSHCh := range chans {
 			if newSSHCh.ChannelType() != "session" {
-				newSSHCh.Reject(ssh.UnknownChannelType, "unknown channel type")
+				err := newSSHCh.Reject(ssh.UnknownChannelType, "unknown channel type")
+				if err != nil {
+					F(s.Log.Debug, "channel reject failed: %s", err)
+				}
 				F(s.Log.Info, "unknown channel type: %s", newSSHCh.ChannelType())
 				continue
 			}
@@ -210,13 +219,16 @@ outer:
 				}
 			}()
 		case <-ctx.Done():
-			lsnr.SetDeadline(time.Unix(1, 0))
+			err := lsnr.SetDeadline(time.Unix(1, 0))
+			if err != nil {
+				s.Log.Debug("RunListenerEventLoop SetDeadline failed")
+			}
 			break outer
 		}
 	}
 
 	// drain
-	for _ = range connChan {
+	for range connChan {
 	}
 
 	wg.Wait()
