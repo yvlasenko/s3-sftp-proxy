@@ -10,13 +10,14 @@ type PhantomObjectInfo struct {
 	LastModified time.Time
 	Size         int64
 	Opaque       interface{}
-	Mtx          sync.Mutex
+	Mtx          *sync.Mutex
 }
 
 func (info *PhantomObjectInfo) GetOne() PhantomObjectInfo {
+	info.Mtx = new(sync.Mutex)
 	info.Mtx.Lock()
 	defer info.Mtx.Unlock()
-	return *info // nolint:govet
+	return *info
 }
 
 func (info *PhantomObjectInfo) setKey(v Path) {
