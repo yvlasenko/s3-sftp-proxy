@@ -13,10 +13,10 @@ type PhantomObjectInfo struct {
 	Mtx          sync.Mutex
 }
 
-func (info *PhantomObjectInfo) GetOne() PhantomObjectInfo {
+func (info *PhantomObjectInfo) GetOne() *PhantomObjectInfo {
 	info.Mtx.Lock()
 	defer info.Mtx.Unlock()
-	return *info // nolint:govet
+	return info
 }
 
 func (info *PhantomObjectInfo) setKey(v Path) {
